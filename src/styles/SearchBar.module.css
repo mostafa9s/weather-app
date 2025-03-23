@@ -1,0 +1,30 @@
+/* styles/SearchBar.module.css */
+.searchBar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .input {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    width: 60%;
+    font-size: 16px;
+  }
+  
+  .button {
+    padding: 10px 15px;
+    border: none;
+    background: #ff7eb3;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .button:hover {
+    background: #ff4f7b;
+  }
+  
