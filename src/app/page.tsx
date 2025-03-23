@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import SearchBar from '../components/SearchBar';
 import { fetchWeather } from '../utils/fetchWeather';
 
@@ -21,7 +22,7 @@ interface WeatherData {
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  const [city, setCity] = useState<string>('');
+  const [searchCity, setSearchCity] = useState<string>(''); // renamed from city
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,7 +33,7 @@ export default function Home() {
   const handleSearch = async (city: string) => {
     try {
       setError(null);
-      setCity(city);
+      setSearchCity(city);
       const data = await fetchWeather(city);
       setWeatherData(data);
     } catch (error) {
@@ -54,9 +55,11 @@ export default function Home() {
       {weatherData && (
         <div className="mt-4 text-center">
           <h2 className="text-2xl">{weatherData.name}, {weatherData.sys.country}</h2>
-          <img
+          <Image
             src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`}
             alt={weatherData.weather[0].description}
+            width={50}
+            height={50}
             className="mx-auto"
           />
           <p className="text-lg">Temperature: {weatherData.main.temp}°C</p>

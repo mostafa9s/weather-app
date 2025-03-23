@@ -28,3 +28,8 @@ export default function RootLayout({
     </html>
   );
 }
+
+export const metadata = {
+  title: 'Weather App',
+  description: 'A simple weather application',
+};
