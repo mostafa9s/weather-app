@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from 'react';
-import Image from 'next/image';
 import SearchBar from '../components/SearchBar';
 import { fetchWeather } from '../utils/fetchWeather';
 import { getWeatherImage } from '../utils/getWeatherImage';
@@ -13,26 +12,29 @@ interface WeatherData {
   weather: Array<{ description: string; icon: string }>;
 }
 
+interface WeatherError {
+  message: string;
+}
+
 export default function Home() {
-  const [city, setCity] = useState('');
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSearch = async (city: string) => {
     try {
       setError(null);
-      setWeatherData(null); // Clear previous data immediately
+      setWeatherData(null);
       const data = await fetchWeather(city);
       
-      // Add 1 second delay before showing the result
       setTimeout(() => {
         setWeatherData(data);
       }, 1000);
       
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const weatherError = error as WeatherError;
       setTimeout(() => {
         setWeatherData(null);
-        setError(error.message.includes('not found') ? 'Unknown city' : 'Unable to fetch weather data. Please try again.');
+        setError(weatherError.message.includes('not found') ? 'Unknown city' : 'Unable to fetch weather data. Please try again.');
       }, 1000);
     }
   };
@@ -44,7 +46,6 @@ export default function Home() {
       {error && <p className="text-red-500 text-center mt-4">{error}</p>}
       {weatherData && (
         <>
-          {/* Background Image - increased opacity from 0.3 to 0.5 */}
           <div 
             className="absolute inset-0 -z-10 opacity-60 transition-opacity duration-1000"
             style={{
@@ -69,6 +70,6 @@ export default function Home() {
         </p>
       </footer>
     </div>
-);
+  );
 }
 
