@@ -1,13 +1,25 @@
+const API_KEY = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
+const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
+
 export async function fetchWeather(city: string) {
   try {
-    const response = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
+    if (!API_KEY) {
+      throw new Error('API key not found');
+    }
+
+    const url = `${BASE_URL}?q=${encodeURIComponent(city)}&units=metric&appid=${API_KEY}`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+    
     const data = await response.json();
 
     if (!response.ok) {
-      if (response.status === 404 || data.cod === '404') {
-        throw new Error(`City "${city}" not found`);
-      }
-      throw new Error(data.error || 'Failed to fetch weather data');
+      throw new Error(data.message || 'Failed to fetch weather data');
     }
 
     return data;
